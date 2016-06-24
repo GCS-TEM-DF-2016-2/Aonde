@@ -12,7 +12,7 @@ class PublicAgencyController < ApplicationController
 
   # Find the data of one public agency to show in the view with chart
   def show
-    find_agencies(params[:id])
+    find_agency_by_id(params[:id])
     increment_views_amount(@public_agency)
   end
 
@@ -28,7 +28,7 @@ class PublicAgencyController < ApplicationController
   def change_type_list_expenses(expenses_month, year)
     HelperController.int_to_month(expenses_month)
     temporary_expense = { year => expenses_month }
-    temporary_expense  
+    temporary_expense
   end
 
   def expenses_public_agency(id_pub_agency)
