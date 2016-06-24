@@ -1,4 +1,9 @@
-class Budget < ActiveRecord::Base
+######################################################################
+# Class name: Budget
+# File name: budget.rb
+# Description: Represents all budgets in application
+######################################################################
 
-	belongs_to :public_agency
+class Budget < ActiveRecord::Base
+	  belongs_to :public_agency
 end
