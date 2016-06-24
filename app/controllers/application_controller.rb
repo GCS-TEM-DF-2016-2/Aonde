@@ -16,6 +16,8 @@ class ApplicationController < ActionController::Base
     # sleep(1)
     # end
 
+    public
+
     def find_agency_by_id(id = 0)
         @public_agency = PublicAgency.find(id)
         @superior_public_agency = SuperiorPublicAgency

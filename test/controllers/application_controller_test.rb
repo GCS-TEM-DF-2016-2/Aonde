@@ -1,3 +1,10 @@
+#####################################################################
+# Class name: ApplicationControllerTest.
+# File name: application_controller_test.rb.
+# Description: Controller that contains all the functionals test
+# of application.
+#####################################################################
+
 require 'test_helper'
 
 class ApplicationControllerTest < ActionController::TestCase

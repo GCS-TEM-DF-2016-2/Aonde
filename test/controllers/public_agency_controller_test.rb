@@ -35,7 +35,7 @@ class PublicAgencyControllerTest < ActionController::TestCase
   end
 
   test 'sum of expenses for public agency' do
-    total_expense = @controller.send(:expenses_public_agency, 1)
+    total_expense = @controller.send(:get_expenses_for_public_agency, 1)
     expected_expense = 500
     assert_equal(expected_expense, total_expense)
   end
@@ -118,4 +118,4 @@ class PublicAgencyControllerTest < ActionController::TestCase
                    public_agency_id: 1, payment_date: Date.new(2015, 4, 2))
   end
 end
-  
+
