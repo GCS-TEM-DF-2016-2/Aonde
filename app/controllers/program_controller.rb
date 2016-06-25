@@ -1,5 +1,11 @@
-# program_controller.rb Process de data necessary to respond the requisitions
-# of user in the view
+#####################################################################
+# Module name: ProgramController
+# File name: program_controller.rb
+# Description: program_controller.rb Process de data necessary to
+# respond the requisitions of user in the view.
+#####################################################################
+
+# 
 class ProgramController < ApplicationController
 
   def show_programs
@@ -9,7 +15,6 @@ class ProgramController < ApplicationController
     end
   end
 
-  ###########################################################
   def show
     program_id = params[ :id ].to_i
     @program = Program.find( program_id )
@@ -33,7 +38,6 @@ class ProgramController < ApplicationController
                                            class_entity )
       Graph.create_nodes( program, program_agency, entity_related )
     rescue Exception => error
-      # puts "\n#{error}"
     end
     entity_related
   end

@@ -1,4 +1,9 @@
-# Process the methods to create graphs
+#####################################################################
+# Module name: Graph
+# File name: graph.rb
+# Description: Process the methods to create graphs
+#####################################################################
+
 module Graph
   def self.create_nodes( entity, data_array, graph_data )
     entity_name = entity.class.name
