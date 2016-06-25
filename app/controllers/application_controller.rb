@@ -1,9 +1,9 @@
-######################################################################
+#####################################################################
 # Class name: ApplicationController
 # File name: application_controller.rb
 # Description: Default parent controller, all others controllers
 # inherit it.
-######################################################################
+#####################################################################
 
 class ApplicationController < ActionController::Base
     # Prevent CSRF attacks by raising an exception.
