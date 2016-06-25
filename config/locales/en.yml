@@ -21,3 +21,10 @@
 
 en:
   hello: "Hello world"
+  Gastos da Federação por função: "Federation expenses by function"
+  Acompanhe os gastos da federação por diferentes funções: "Follow the federation spending by different functions"
+  Itens excluidos do gráfico: "Excluded items from graph "
+  Filtre o gráfico: "Filter graph"
+  Padrão: "Pattern"
+  Filtre: "Filter"
+  Fechar: "Close"
