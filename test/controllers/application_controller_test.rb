@@ -1,7 +1,7 @@
 #####################################################################
 # Class name: ApplicationControllerTest.
 # File name: application_controller_test.rb.
-# Description:  Test class that contains all functional tests for
+# Description: Test class that contains all functional tests for
 # application controller.
 #####################################################################
 

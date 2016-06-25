@@ -1,7 +1,7 @@
 #####################################################################
 # Class name: CompanyControllerTest.
 # File name: company_controller_test.rb.
-# Description:  Test class that contains all functional tests for
+# Description: Test class that contains all functional tests for
 # company controller.
 #####################################################################
 

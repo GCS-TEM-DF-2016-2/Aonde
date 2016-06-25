@@ -1,7 +1,7 @@
 #####################################################################
 # Class name: BudgetAPITest.
 # File name: budget_api_test.rb.
-# Description:  Test class that contains all functional tests for
+# Description: Test class that contains all functional tests for
 # budget api.
 #####################################################################
 
