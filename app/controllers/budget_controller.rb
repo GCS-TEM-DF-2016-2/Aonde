@@ -1,5 +1,17 @@
-# Controller of budget to manage the data of expenses and budget
+######################################################################
+# Class name: BudgetController
+# File name: budget_controller.rb
+# Description: Controller of budget to manage the data of expenses and 
+# budget
+####################################################################### 
+
+
 class BudgetController < ApplicationController
+
+  # Description: Renders a page in JSon format containing the information of a
+  # specific budget.
+  # Parameters: none.
+  # Return: none.
   def show
     expense_month = process_expense( params[ :year ],params[ :id ].to_i )
     budget_month = process_budget( params[ :year ], params[ :id ],expense_month )
@@ -9,6 +21,10 @@ class BudgetController < ApplicationController
     end
   end
 
+  # Description: Prepares the expenses of a given public agency, by year, in 
+  # hash format.
+  # Parameters: year, id_public_agency.
+  # Return: expense_month.
   def process_expense( year,id_public_agency )
     year ||= 2015
     expense_month = HelperController.expenses_year( id_public_agency, year )
@@ -17,6 +33,10 @@ class BudgetController < ApplicationController
     return expense_month
   end
 
+  # Description: Prepares the budget of a given public agency, by month, in 
+  # array format.
+  # Parameters:
+  # Return: budget_month.
   def process_budget( year, id_public_agency, expense_month )
 
     budget_month = [ ]
@@ -28,6 +48,10 @@ class BudgetController < ApplicationController
     end
     return budget_month
   end
+
+  # Description: Prepares a hash of expenses by month.
+  # Parameters: expense_month.
+  # Return: expenses_months.
   def initialize_hash( expense_month )
     expenses_months = {}
     for month in 1..12
@@ -40,6 +64,9 @@ class BudgetController < ApplicationController
     expenses_months
   end
 
+  # Description: Subtracts the expenses by the budgets of a year.
+  # Parameters: id_public_agency, year, expense.
+  # Return: budget_array.
   def subtract_expenses_budget( id_public_agency, year, expense )
     budget_array = [ ]
     begin
@@ -53,6 +80,9 @@ class BudgetController < ApplicationController
     budget_array
   end
 
+  # Description: Creates an array of budgets.
+  # Parameters: expenses, budgets, year.
+  # Return: budget_array.
   def create_budget_array( expenses, budgets, year )
     budget_array = [ ]
     budget = budgets[ 0 ]
@@ -66,6 +96,8 @@ class BudgetController < ApplicationController
 
     budget_array
    end
+
    private :create_budget_array, :subtract_expenses_budget, :process_expense,
            :process_budget
+           
 end
