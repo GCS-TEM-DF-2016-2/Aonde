@@ -1,3 +1,10 @@
+#####################################################################
+# Class name: FunctionControllerTest.
+# File name: function_controller_test.rb.
+# Description: Test class that contains all functional tests for
+# function controller.
+#####################################################################
+
 require 'test_helper'
 require 'database_cleaner'
 
