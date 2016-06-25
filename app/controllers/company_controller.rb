@@ -2,12 +2,12 @@
 # Process the expenses of companies to create chart related to a public agency
 # or a graph with all public agencies make hires
 class CompanyController < ApplicationController
- 
+
   def show
-    year = params[:year]
-    id = params[:id]
+    year = params[ :year ]
+    id = params[ :id ]
     company_expense = HelperController
-                      .find_expenses_entity(year, id, :company, :name)
+                      .find_expenses_entity( year, id, :company, :name )
 
     respond_to do |format|
       format.json { render json: company_expense }
@@ -15,52 +15,52 @@ class CompanyController < ApplicationController
   end
 
   def find
-    expenses = Expense.where(company_id: params[:id])
-    company_hiring_incidence = find_public_agencies(expenses)
-    # company_hiring_incidence = get_15_first_nodes(company_hiring_incidence)
-    @company = Company.find(params[:id])
-    data_company = generate_company_node(@company.name)
-    array = generate_public_agency_node(@company.name, company_hiring_incidence,
-                                        data_company)
+    expenses = Expense.where( company_id: params[ :id ] )
+    company_hiring_incidence = find_public_agencies( expenses )
+    # company_hiring_incidence = get_15_first_nodes( company_hiring_incidence )
+    @company = Company.find( params[ :id ] )
+    data_company = generate_company_node( @company.name )
+    array = generate_public_agency_node( @company.name, company_hiring_incidence,
+                                        data_company )
     @correct_datas = array.to_json
   end
 
-  def find_public_agencies(expenses)
+  def find_public_agencies( expenses )
     company_hiring_incidence = {}
     expenses.each do |expense|
       unless expense.public_agency_id.nil?
-        public_agency = PublicAgency.find(expense.public_agency_id)
-        verify_insert(company_hiring_incidence, public_agency)
+        public_agency = PublicAgency.find( expense.public_agency_id )
+        verify_insert( company_hiring_incidence, public_agency )
       end
     end
     company_hiring_incidence.sort_by { |_name, expense| expense }
   end
 
-  def find_hiring_count(public_agency)
-    counting = Expense.where(public_agency_id: public_agency.id).count
+  def find_hiring_count( public_agency )
+    counting = Expense.where( public_agency_id: public_agency.id ).count
   end
 
-  def verify_insert(company_hiring_incidence, public_agency)
-    unless company_hiring_incidence[public_agency.name]
-      counting = find_hiring_count(public_agency)
-      company_hiring_incidence[public_agency.name] = counting
+  def verify_insert( company_hiring_incidence, public_agency )
+    unless company_hiring_incidence[ public_agency.name ]
+      counting = find_hiring_count( public_agency )
+      company_hiring_incidence[ public_agency.name ] = counting
     end
   end
 
-  def generate_company_node(company_name)
+  def generate_company_node( company_name )
     data_company = [
       { 'data' => { 'id' => company_name }, 'position' => { 'x' => 0,
                                                             'y' => 400 } },
       { 'data' => { 'id' => 'Órgãos Públicos' } },
       { 'data' => { 'id' => 'qtde Contratações' } }
-    ]
+     ]
   end
 
-  def generate_public_agency_node(company_name, company_hiring_incidence,
-    data_company)
+  def generate_public_agency_node( company_name, company_hiring_incidence,
+    data_company )
     count = 1
-    array_general = []
-    edges = []
+    array_general = [ ]
+    edges = [ ]
     company_hiring_incidence.each do |public_agency_name, hiring|
       public_agency_name = public_agency_name.to_s
       hash_public_agency = { 'data' => { 'id' => public_agency_name,
