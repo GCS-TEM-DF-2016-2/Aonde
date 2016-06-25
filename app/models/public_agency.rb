@@ -12,5 +12,4 @@ class PublicAgency < ActiveRecord::Base
 #including validation.
   validates :name, presence: true
   validates :views_amount, numericality: {greater_than: -1}
-
 end

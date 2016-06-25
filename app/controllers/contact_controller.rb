@@ -8,6 +8,9 @@
 require 'rest-client'
 # Comunicate with API to send a email
 class ContactController < ApplicationController
+
+    public
+
     def send_simple_message
         user_email = params[ :from ]
         subject = params[ :subject ]
