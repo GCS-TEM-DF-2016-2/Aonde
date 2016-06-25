@@ -12,16 +12,16 @@ class ApplicationController < ActionController::Base
     #  before_action :owl_zueira
 
     # def owl_zueira
-    #  logger.info "  ,,,\n {0,0}\n./) )\n==\"=\"=="
-    # sleep(1)
+    #  logger.info "  ,,,\n {0,0}\n./ ) )\n==\"=\"=="
+    # sleep( 1 )
     # end
 
     public
 
-    def find_agency_by_id(id = 0)
-        @public_agency = PublicAgency.find(id)
+    def find_agency_by_id( id = 0 )
+        @public_agency = PublicAgency.find( id )
         @superior_public_agency = SuperiorPublicAgency
-          .find(@public_agency.superior_public_agency_id)
+          .find( @public_agency.superior_public_agency_id )
 
         return @public_agency
     end
