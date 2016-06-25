@@ -53,7 +53,7 @@ class BudgetControllerTest < ActionController::TestCase
     hash = [ [ 1, 29 ], [ 2, 0 ], [ 3, 0 ], [ 4, 0 ], [ 5, 0 ], [ 6, 0 ], [ 7, 23 ], [ 8, 0 ],
             [ 9, 0 ], [ 10, 0 ], [ 11, 0 ], [ 12, 0 ] ]
 
-    expense_controller = @controller.send( :subtract_expenses_budget,2, 2015,hash )
+    expense_controller = @controller.send(:subtract_expenses_budget,2, 2015,hash )
     expected_array = [ 71, 71, 71, 71, 71, 71, 48, 48, 48, 48, 48, 48 ]
     assert_equal( expected_array, expense_controller )
   end
@@ -111,8 +111,8 @@ class BudgetControllerTest < ActionController::TestCase
     url = 'http://aondebrasil.com:8890/sparql?default-graph-uri=&query='\
           'PREFIX%20rdf:%20%3Chttp://www.w3.org/1999/02/22-rdf-syntax-ns'\
           '%23%3E%20PREFIX%20loa:%20%3Chttp://vocab.e.gov.br/2013/09/loa'\
-          '%23%3ESELECT%20?ano,%20( SUM( ?valorProjetoLei )%20AS%20?somaProje'\
-          'toLei )%20WHERE%20%7B?itemBlankNode%20loa:temExercicio%20?exercic'\
+          '%23%3ESELECT%20?ano,%20(SUM(?valorProjetoLei)%20AS%20?somaProje'\
+          'toLei)%20WHERE%20%7B?itemBlankNode%20loa:temExercicio%20?exercic'\
           'ioURI%20.%20?exercicioURI%20loa:identificador%202014%20'\
           '.%20?exercicioURI%20loa:identificador%20?ano%20.%20?itemBlankNod'\
           'e%20loa:temUnidadeOrcamentaria%20?uoURI%20.%20?uoURI%20loa:codig'\
@@ -122,30 +122,30 @@ class BudgetControllerTest < ActionController::TestCase
     url_all = 'http://aondebrasil.com:8890/sparql?default-graph-uri=&query=PREFIX'\
           '%20rdf:%20%3Chttp://www.w3.org/1999/02/22-rdf-syntax-ns%23%3E%20PR'\
           'EFIX%20loa:%20%3Chttp://vocab.e.gov.br/2013/09/loa%23%3ESELECT%20?'\
-          'ano,%20( SUM( ?valorProjetoLei )%20AS%20?somaProjetoLei )%20WHERE%20%7'\
+          'ano,%20(SUM(?valorProjetoLei)%20AS%20?somaProjetoLei)%20WHERE%20%7'\
           'B?itemBlankNode%20loa:temExercicio%20?exercicioURI%20.%20?exercici'\
           'oURI%20loa:identificador%20?ano%20.%20?itemBlankNode%20loa:temUnid'\
           'adeOrcamentaria%20?uoURI%20.%20?uoURI%20loa:codigo%20%222%22%2'\
           '0.%20?itemBlankNode%20loa:valorProjetoLei%20?valorProjetoLei%20.%2'\
           '0%7D&debug=on&timeout=&format=application%2Fsparql-results%2Bjson&'\
           'save=display&fname='
-    content_body = '{"results":{"bindings":[ '\
-          '{"ano": {"value": "2014"},"somaProjetoLei":{"value":"100"}} ]}}'
-    FakeWeb.register_uri( :get, url, body: content_body )
-    FakeWeb.register_uri( :get, url_all, body: content_body )
+    content_body = '{"results":{"bindings":['\
+          '{"ano": {"value": "2014"},"somaProjetoLei":{"value":"100"}}]}}'
+    FakeWeb.register_uri(:get, url, body: content_body)
+    FakeWeb.register_uri(:get, url_all, body: content_body)
   end
 
   def create_fake_budget_error
     url_error = 'http://aondebrasil.com:8890/sparql?default-graph-uri=&query=PREFIX'\
           '%20rdf:%20%3Chttp://www.w3.org/1999/02/22-rdf-syntax-ns%23%3E%20PR'\
           'EFIX%20loa:%20%3Chttp://vocab.e.gov.br/2013/09/loa%23%3ESELECT%20?'\
-          'ano,%20( SUM( ?valorProjetoLei )%20AS%20?somaProjetoLei )%20WHERE%20%7'\
+          'ano,%20(SUM(?valorProjetoLei)%20AS%20?somaProjetoLei)%20WHERE%20%7'\
           'B?itemBlankNode%20loa:temExercicio%20?exercicioURI%20.%20?exercici'\
           'oURI%20loa:identificador%20?ano%20.%20?itemBlankNode%20loa:temUnid'\
           'adeOrcamentaria%20?uoURI%20.%20?uoURI%20loa:codigo%20%222%22%2'\
           '0.%20?itemBlankNode%20loa:valorProjetoLei%20?valorProjetoLei%20.%2'\
           '0%7D&debug=on&timeout=&format=application%2Fsparql-results%2Bjson&'\
           'save=display&fname='
-    FakeWeb.register_uri( :get, url_error, body: "{'results: {}'}" )
+    FakeWeb.register_uri(:get, url_error, body: "{'results: {}'}")
   end
 end
