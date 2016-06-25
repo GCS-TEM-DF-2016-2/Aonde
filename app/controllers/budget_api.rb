@@ -92,7 +92,7 @@ class BudgetAPI
     year_query = query_for_year( year )
 
     # puts year_query
-    query = 'SELECT ?ano, ( SUM( ?valorProjetoLei ) AS ?somaProjetoLei ) WHERE {'\
+    query = 'SELECT ?ano, (SUM(?valorProjetoLei) AS ?somaProjetoLei) WHERE {'\
             '?itemBlankNode loa:temExercicio ?exercicioURI . ' + year_query +
             '?exercicioURI loa:identificador ?ano . '\
             '?itemBlankNode loa:temUnidadeOrcamentaria ?uoURI . '\
