@@ -1,5 +1,5 @@
 #####################################################################
-# Class name: ProgramControllerTest .
+# Class name: ProgramControllerTest.
 # File name: program_controller_test.rb.
 # Description: Test class that contains all functional tests for
 # program controller.

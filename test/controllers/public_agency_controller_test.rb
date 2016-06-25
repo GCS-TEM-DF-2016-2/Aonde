@@ -1,5 +1,5 @@
 #####################################################################
-# Class name: PublicAgencyControllerTest .
+# Class name: PublicAgencyControllerTest.
 # File name: public_agency_controller_test.rb.
 # Description: Test class that contains all functional tests for
 # public agency controller.
