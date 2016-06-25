@@ -6,6 +6,7 @@
 ####################################################################### 
 
 class CompanyController < ApplicationController
+  include Assertions
 
   # Description: Prepares the attributes of an specific year to be shown in the
   # Show view.
@@ -17,6 +18,7 @@ class CompanyController < ApplicationController
     company_id = params[ :id ]
     company_expense = HelperController
                       .find_expenses_entity( year, company_id, :company, :name )
+    assert_object_is_not_null( company_expense )
 
     respond_to do |format|
       format.json { render json: company_expense }
@@ -28,11 +30,15 @@ class CompanyController < ApplicationController
   # Return: none.
  def find
     company_expenses = Expense.where( company_id: params[ :id ] )
+    assert_object_is_not_null( company_expenses )
     company_hiring_incidence = find_public_agencies( company_expenses )
+    assert_object_is_not_null( company_hiring_incidence )
     @company = Company.find( params[ :id ] )
     company_node = generate_company_node( @company.name )
+    assert_object_is_not_null( company_node )
     company_data = generate_public_agency_node( @company.name, 
                                         company_hiring_incidence, company_node )
+    assert_object_is_not_null( company_data )
     @correct_datas = company_data.to_json
   end
 
@@ -40,6 +46,8 @@ class CompanyController < ApplicationController
   # Parameters: expenses.
   # Return: company_hiring_incidence.
    def find_public_agencies( expenses )
+    assert_object_is_not_null( expenses )
+    assert_type_of_object( expenses, Expense::ActiveRecord_Relation )
     company_hiring_incidence = {}
     expenses.each do |expense|
       if (!expense.public_agency_id.nil?)
@@ -56,6 +64,8 @@ class CompanyController < ApplicationController
   # Parameters: public_agency.
   # Return: counting.
   def find_hiring_count( public_agency )
+    assert_object_is_not_null( public_agency )
+    assert_type_of_object( public_agency, PublicAgency)
     counting = Expense.where( public_agency_id: public_agency.id ).count
     return counting
   end
@@ -65,7 +75,11 @@ class CompanyController < ApplicationController
   # Parameters: company_hiring_incidence, public_agency.
   # Return: none.
   def verify_insert( company_hiring_incidence, public_agency )
-    if ( company_hiring_incidence[ public_agency_name ].nil? )
+    assert_object_is_not_null( company_hiring_incidence)
+    assert_object_is_not_null( public_agency )
+    assert_type_of_object( company_hiring_incidence, Hash)
+    assert_type_of_object( public_agency, PublicAgency )
+    if ( company_hiring_incidence[ public_agency.name ].nil? )
       counting = find_hiring_count( public_agency )
       company_hiring_incidence[ public_agency.name ] = counting
     else
@@ -79,6 +93,8 @@ class CompanyController < ApplicationController
   # Parameters: company_name.
   # Return: data_company.
   def generate_company_node( company_name )
+    assert_object_is_not_null( company_name )
+    assert_type_of_object( company_name, String )
     data_company = [
       { 'data' => { 'id' => company_name }, 'position' => { 'x' => 0,
                                                             'y' => 400 } },
@@ -93,6 +109,12 @@ class CompanyController < ApplicationController
   # Return: array_general.
   def generate_public_agency_node( company_name, company_hiring_incidence,
     data_company )
+    assert_object_is_not_null( company_name )
+    assert_object_is_not_null( company_hiring_incidence )
+    assert_object_is_not_null( data_company )
+    assert_type_of_object( company_name, String )
+    assert_type_of_object( company_hiring_incidence, Hash)
+    assert_type_of_object( data_company, Array )
     count = 1
     array_general = [ ]
     edges = [ ]
