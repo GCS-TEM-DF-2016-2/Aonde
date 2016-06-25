@@ -14,7 +14,8 @@ class BudgetController < ApplicationController
   # Return: none.
   def show
     expense_month = process_expense( params[ :year ],params[ :id ].to_i )
-    budget_month = process_budget( params[ :year ], params[ :id ],expense_month )
+    budget_month = process_budget( params[ :year ], 
+                                   params[ :id ], expense_month )
     data_budget = { 'expenses' => expense_month, 'budgets' => budget_month }
     respond_to do |format|
       format.json { render json: data_budget }
@@ -26,19 +27,23 @@ class BudgetController < ApplicationController
   # Parameters: year, id_public_agency.
   # Return: expense_month.
   def process_expense( year,id_public_agency )
-    year ||= 2015
+    if (year.nil?)
+      year ||= 2015
+    else
+      # Nothing to do.
+    end
     expense_month = HelperController.expenses_year( id_public_agency, year )
     expense_month = initialize_hash( expense_month )
-    expense_month = HelperController.int_to_month( expense_month ).transform_values! {|v| v.to_f}.to_a
+    expense_month = HelperController.int_to_month( expense_month )
+    expense_month = expense_month.transform_values! {|value| value.to_f}.to_a
     return expense_month
   end
 
   # Description: Prepares the budget of a given public agency, by month, in 
   # array format.
-  # Parameters:
+  # Parameters: year, id_public_agency, expense_month
   # Return: budget_month.
   def process_budget( year, id_public_agency, expense_month )
-
     budget_month = [ ]
     begin
       budget_month = subtract_expenses_budget( id_public_agency, year,
@@ -52,16 +57,18 @@ class BudgetController < ApplicationController
   # Description: Prepares a hash of expenses by month.
   # Parameters: expense_month.
   # Return: expenses_months.
-  def initialize_hash( expense_month )
+  def initialize_hash( expense )
     expenses_months = {}
+    # Iterates through numbers 1 to 12, each one representing a month.
     for month in 1..12
-      if !expense_month[ month ]
+      # Assigns expense 0 to a month, if no value exists in the expense hash.
+      if !expense[ month ]
         expenses_months[ month ] = 0
       else
-        expenses_months[ month ] = expense_month[ month ]
+        expenses_months[ month ] = expense[ month ]
       end
     end
-    expenses_months
+   return expenses_months
   end
 
   # Description: Subtracts the expenses by the budgets of a year.
@@ -71,13 +78,17 @@ class BudgetController < ApplicationController
     budget_array = [ ]
     begin
       budgets = BudgetAPI.get_budget( id_public_agency, year )
-      unless expense.empty?
+      if (!expense.empty?)
         budget_array = create_budget_array( expense, budgets, year )
+      else
+        # Nothing to do.
       end
      rescue Exception => error
-       raise "Não foi possível obter o orçamento do ano #{year} do Órgão Público desejado\n#{error}"
+       raise "Não foi possível obter o orçamento do ano #{year} do Órgão\ 
+       Público desejado\n#{error}"
      end
-    budget_array
+
+    return budget_array
   end
 
   # Description: Creates an array of budgets.
@@ -92,12 +103,13 @@ class BudgetController < ApplicationController
         budget[ 'value' ] -= value
         budget_array << budget[ 'value' ]
       end
+    else
+      # Nothing to do.
     end
-
-    budget_array
-   end
+    return budget_array
+  end
 
    private :create_budget_array, :subtract_expenses_budget, :process_expense,
            :process_budget
-           
+
 end
