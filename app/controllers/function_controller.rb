@@ -1,5 +1,10 @@
-# function_controller.rb
-# Process the information of functions only for federation
+#####################################################################
+# Class name: FunctionController
+# File name: function_controller.rb
+# Description: Process the information of functions only for 
+# federation
+#####################################################################
+
 class FunctionController < ApplicationController
   def show
     dates = HelperController.create_date
@@ -51,10 +56,12 @@ class FunctionController < ApplicationController
 
       year_filter = year.to_i
       if month == 'Todos'
-        date_hash = { from_month: 'Janeiro', end_month: 'Dezembro', from_year: year_filter, end_year: year_filter }
+        date_hash = { from_month: 'Janeiro', end_month: 'Dezembro',
+         from_year: year_filter, end_year: year_filter }
         dates = HelperController.create_date( date_hash )
       else
-        date_hash = { from_month: month, end_month: month, from_year: year_filter, end_year: year_filter }
+        date_hash = { from_month: month, end_month: month,
+         from_year: year_filter, end_year: year_filter }
         dates = HelperController.create_date( date_hash )
       end
     end
@@ -72,7 +79,8 @@ class FunctionController < ApplicationController
   end
 
   def find_functions_values( begin_date,end_date )
-    functions_expenses = FunctionGraph.where( year: ( begin_date.year..end_date.year ) )
+    functions_expenses = FunctionGraph.where( year: 
+      ( begin_date.year..end_date.year ) )
     .select( :description ).group( :description ).sum( :value ).to_json
   end
 

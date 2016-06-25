@@ -1,6 +1,6 @@
 #####################################################################
-# Class name: ApplicationController
-# File name: application_controller.rb
+# Class name: BudgetAPI
+# File name: budget_api.rb
 # Description: budget_api.rb Communicate with API of budget,
 # obtain the data in json format and parse it to be used in rails.
 #####################################################################
