@@ -1,9 +1,18 @@
-# company_controller.rb
-# Process the expenses of companies to create chart related to a public agency
-# or a graph with all public agencies make hires
+######################################################################
+# Class name: CompanyController
+# File name: company_controller.rb
+# Description: Process the expenses of companies to create chart related to a 
+# public agency or a graph with all public agencies make hires
+####################################################################### 
+
 class CompanyController < ApplicationController
 
+  # Description: Prepares the attributes of an specific year to be shown in the
+  # Show view.
+  # Parameters: none.
+  # Return: none.
   def show
+    # Gets from the URL the year whose attributes are being collected.
     year = params[ :year ]
     id = params[ :id ]
     company_expense = HelperController
@@ -14,6 +23,9 @@ class CompanyController < ApplicationController
     end
   end
 
+  # Description: Finds the expenses and hiring incidence of a company.
+  # Parameters: none.
+  # Return: none.
   def find
     expenses = Expense.where( company_id: params[ :id ] )
     company_hiring_incidence = find_public_agencies( expenses )
@@ -25,6 +37,9 @@ class CompanyController < ApplicationController
     @correct_datas = array.to_json
   end
 
+  # Description: Finds and sorts the public agencies based on their expenses.
+  # Parameters: expenses.
+  # Return: none.
   def find_public_agencies( expenses )
     company_hiring_incidence = {}
     expenses.each do |expense|
@@ -36,10 +51,16 @@ class CompanyController < ApplicationController
     company_hiring_incidence.sort_by { |_name, expense| expense }
   end
 
+  # Description: Gets the hiring count of a given public agency.
+  # Parameters: public_agency.
+  # Return: counting.
   def find_hiring_count( public_agency )
     counting = Expense.where( public_agency_id: public_agency.id ).count
   end
 
+  # Description: Verifies and stores the hiring incidence counting of a company.
+  # Parameters: company_hiring_incidence, public_agency.
+  # Return: none.
   def verify_insert( company_hiring_incidence, public_agency )
     unless company_hiring_incidence[ public_agency.name ]
       counting = find_hiring_count( public_agency )
@@ -47,6 +68,10 @@ class CompanyController < ApplicationController
     end
   end
 
+  # Description: Prepares a 'node' of a company. This node is a collection of 
+  # data in hash format to be used in the charts.
+  # Parameters: company_name.
+  # Return: none.
   def generate_company_node( company_name )
     data_company = [
       { 'data' => { 'id' => company_name }, 'position' => { 'x' => 0,
@@ -55,7 +80,10 @@ class CompanyController < ApplicationController
       { 'data' => { 'id' => 'qtde Contratações' } }
      ]
   end
-
+  # Description: Prepares a 'node' of a public agency. This node is a collection
+  # of data in hash format to be used in the charts.
+  # Parameters: company_name, company_hiring_incidence.
+  # Return: array_general.
   def generate_public_agency_node( company_name, company_hiring_incidence,
     data_company )
     count = 1
