@@ -18,8 +18,12 @@ class ApplicationController < ActionController::Base
 
     public
 
-    def find_agency_by_id( id = 0 )
-        @public_agency = PublicAgency.find( id )
+    # Description: Method that returns a specific public agency
+    # found by its id.
+    # Parameters: public_agency_id.
+    # Return: @public_agency.
+    def find_agency_by_id( public_agency_id = 0 )
+        @public_agency = PublicAgency.find( public_agency_id )
         @superior_public_agency = SuperiorPublicAgency
           .find( @public_agency.superior_public_agency_id )
 

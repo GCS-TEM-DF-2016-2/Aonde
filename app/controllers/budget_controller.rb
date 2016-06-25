@@ -1,10 +1,9 @@
 ######################################################################
 # Class name: BudgetController
 # File name: budget_controller.rb
-# Description: Controller of budget to manage the data of expenses and 
+# Description: Controller of budget to manage the data of expenses and
 # budget
-####################################################################### 
-
+#######################################################################
 
 class BudgetController < ApplicationController
 
@@ -16,7 +15,7 @@ class BudgetController < ApplicationController
   # Return: none.
   def show
     expense_month = process_expense( params[ :year ],params[ :id ].to_i )
-    budget_month = process_budget( params[ :year ], 
+    budget_month = process_budget( params[ :year ],
                                    params[ :id ], expense_month )
     data_budget = { 'expenses' => expense_month, 'budgets' => budget_month }
     assert_object_is_not_null( data_budget )
@@ -25,7 +24,7 @@ class BudgetController < ApplicationController
     end
   end
 
-  # Description: Prepares the expenses of a given public agency, by year, in 
+  # Description: Prepares the expenses of a given public agency, by year, in
   # hash format.
   # Parameters: year, id_public_agency.
   # Return: expense_month.
@@ -44,7 +43,7 @@ class BudgetController < ApplicationController
     return expense_month
   end
 
-  # Description: Prepares the budget of a given public agency, by month, in 
+  # Description: Prepares the budget of a given public agency, by month, in
   # array format.
   # Parameters: year, id_public_agency, expense_month
   # Return: budget_month.
@@ -105,7 +104,7 @@ class BudgetController < ApplicationController
         # Nothing to do.
       end
      rescue Exception => error
-       raise "Não foi possível obter o orçamento do ano #{year} do Órgão\ 
+       raise "Não foi possível obter o orçamento do ano #{year} do Órgão\
        Público desejado\n#{error}"
      end
      assert_object_is_not_null( budget_array )
