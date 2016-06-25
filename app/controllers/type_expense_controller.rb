@@ -1,3 +1,10 @@
+#####################################################################
+# Class name: TypeExpenseController
+# File name: type_expense_controller.rb
+# Description:  Controller used for doing communication between the
+# views of type_expense and the model TypeExpense.
+#####################################################################
+
 # type_expense_controller.rb
 # Obtain and process the data of expenses associate to type expense
 # of a public agency
@@ -13,6 +20,12 @@ class TypeExpenseController < ApplicationController
         end
     end
 
+    public
+
+    # Description: Method that returns an array with all expenses of a public
+    # agency, according to expense's type.
+    # Parameters: id_public_agency,year(parameter with default value of 2015).
+    # Return: list_type_expenses.
     def get_expense_by_type( id_public_agency, year = '2015' )
         all_expenses = HelperController
           .find_expenses_entity( year, id_public_agency,
@@ -27,9 +40,14 @@ class TypeExpenseController < ApplicationController
         end
 
         define_color( total_expense, list_type_expenses )
-        list_type_expenses
+
+        return list_type_expenses
     end
 
+    # Description: Method that define the color of expense that will be showed
+    # at chart. The color is defined according to percentage of expense's value.
+    # Parameters: total_expense, list_type_expenses.
+    # Return: none.
     def define_color( total_expense, list_type_expenses )
         list_type_expenses.each do |expense|
             expense_per_cent = expense[ :value ] * 100 / total_expense
