@@ -14,67 +14,72 @@ class FunctionController < ApplicationController
   # Parameters: none.
   # Return: none.
   def show
-    dates = HelperController.create_date
-    assert_object_is_not_null( dates )
-    datas = insert_expenses_functions( dates[ :begin ], dates[ :end ] )
-    datas.transform_values! {|value| value.to_i}
-    ordered_data = datas.sort_by { |_description, sumValue| -sumValue }
-    @correct_datas = datas.to_json
-    @top_10_data = get_top_10_data( ordered_data ).to_h.to_json
+    time_interval = HelperController.create_date
+    assert_object_is_not_null( time_interval )
+    function_expenses_by_date = insert_expenses_functions( 
+                                  time_interval[ :begin ], 
+                                  time_interval[ :end ] )
+    function_expenses_by_date.transform_values! {|value| value.to_i}
+    ordered_function_expenses_by_date = 
+        function_expenses_by_date.sort_by { |_description, sumValue| -sumValue }
+    @FUNCTION_EXPENSES = function_expenses_by_date.to_json
+    @TOP_10_DATA = get_top_10_data( 
+                              ordered_function_expenses_by_date ).to_h.to_json
   end
 
-  # Description: filters the data on the graph by year or month.
+  # Description: Filters the data on the graph by selected year and month.
   # Parameters: none.
   # Return: none.
   def filter
-    dates = find_dates( params[ :year ], params[ :month ] )
-    assert_object_is_not_null( dates )
-    expenses = get_expenses( dates )
+    time_interval = find_dates( params[ :year ], params[ :month ] )
+    assert_object_is_not_null( time_interval )
+    expenses = get_expenses( time_interval )
     assert_object_is_not_null( expenses )
     expenses.transform_values! {|value| value.to_i}
-    @correct_datas = expenses.to_json
-    ordered_data = expenses.sort_by { |_description, sumValue| -sumValue }
-    @top_10_data = get_top_10_data( ordered_data ).to_h.to_json
+    @FUNCTION_EXPENSES = expenses.to_json
+    ordered_expenses = expenses.sort_by { |_description, sumValue| -sumValue }
+    @TOP_10_DATA = get_top_10_data( ordered_expenses ).to_h.to_json
     render 'show'
   end
 
-  # Description: gets 10 of the highest previously ordered data 
+  # Description: Gets 10 of the highest previously ordered data 
   # Parameters: ordered_data
   # Return: none
   def get_top_10_data( ordered_data )
     assert_object_is_not_null( ordered_data )
     assert_type_of_object( ordered_data, Hash )
-    @data_not_sort = filter_top_n( ordered_data, 10 )
-    @top_10_data = sort_by_description( @data_not_sort )
+    @UNSORTED_DATA = filter_top_elements( ordered_data, 10 )
+    @TOP_10_DATA = sort_by_description( @UNSORTED_DATA )
   end
 
   # Description: sorts a hash of data alphabetically by description.
   # Parameters: data.
-  # Return: sorted_data.
+  # Return: data_sorted_by_description.
   def sort_by_description( data )
     assert_object_is_not_null( data )
     assert_type_of_object( data, Hash )
-    sorted_data = data.sort_by { |description, _sumValue| description }
-    return sorted_data
+    data_sorted_by_description = 
+                          data.sort_by { |description, _sumValue| description }
+    return data_sorted_by_description
   end
 
   # Description: filters a determined amount of elements at the top of a data
   # hash.
   # Parameters: hash, amount_of_elements_to_filter
-  # Return: new_hash
-  def filter_top_n( hash, amount_of_elements_to_filter )
-    assert_object_is_not_null( hash )
-    assert_type_of_object( hash, Hash )
+  # Return: ordered_data_in_hash
+  def filter_top_elements( data_in_hash, amount_of_elements_to_filter )
+    assert_object_is_not_null( data_in_hash )
+    assert_type_of_object( data_in_hash, Hash )
     assert_object_is_not_null( amount_of_elements_to_filter )
     assert_type_of_object( amount_of_elements_to_filter, Fixnum )
-    new_hash = {}
+    ordered_data_in_hash = {}
 
-    hash.each_with_index do |( description, sumValue ), index|
+    data_in_hash.each_with_index do |( description, summed_value ), index|
       break if ( index >= amount_of_elements_to_filter )
-      new_hash[ description ] = sumValue
+      ordered_data_in_hash[ description ] = summed_value
     end
-    assert_object_is_not_null( new_hash )
-    new_hash
+    assert_object_is_not_null( ordered_data_in_hash )
+    ordered_data_in_hash
   end
 
   # Description: Finds the data related to the provided dates, and filters them
@@ -84,11 +89,11 @@ class FunctionController < ApplicationController
   def find_dates( year = 'Até hoje!', month = 'Todos' )
     assert_type_of_object( year, String )
     assert_type_of_object( month, String )
-    dates = {}
+    time_interval = {}
     if year == 'Até hoje!'
-      dates = HelperController.create_date
+      time_interval = HelperController.create_date
     elsif month == 'Todos'
-      dates = HelperController.create_date(
+      time_interval = HelperController.create_date(
         from_month: 'Janeiro', end_month: 'Dezembro',
         from_year: year, end_year: year )
     else
@@ -97,25 +102,26 @@ class FunctionController < ApplicationController
       if month == 'Todos'
         date_hash = { from_month: 'Janeiro', end_month: 'Dezembro',
          from_year: year_filter, end_year: year_filter }
-        dates = HelperController.create_date( date_hash )
+        time_interval = HelperController.create_date( date_hash )
       else
         date_hash = { from_month: month, end_month: month,
          from_year: year_filter, end_year: year_filter }
-        dates = HelperController.create_date( date_hash )
+        time_interval = HelperController.create_date( date_hash )
       end
     end
-    assert_object_is_not_null( dates )
-    dates
+    assert_object_is_not_null( time_interval )
+    time_interval
   end
 
   # Description: Prepares a hash of expenses existing in a determined time
   # interval.
-  # Parameters: dates.
+  # Parameters: time_interval.
   # Return: expenses.
-  def get_expenses( dates )
-    assert_object_is_not_null( dates )
-    assert_type_of_object( dates, Hash )
-    expenses = insert_expenses_functions( dates[ :begin ], dates[ :end ] )
+  def get_expenses( time_interval )
+    assert_object_is_not_null( time_interval )
+    assert_type_of_object( time_interval, Hash )
+    expenses = insert_expenses_functions( time_interval[ :begin ], 
+                                          time_interval[ :end ] )
     assert_object_is_not_null( expenses )
     expenses
   end
@@ -124,15 +130,15 @@ class FunctionController < ApplicationController
   # expenses.
   # Parameters: begin_date, end_date.
   # Return: exp.
-  def insert_expenses_functions( begin_date,end_date )
+  def insert_expenses_functions( begin_date, end_date )
     assert_object_is_not_null( begin_date )
     assert_type_of_object( begin_date, String )
     assert_object_is_not_null( end_date )
     assert_type_of_object( end_date, String )
     expenses = find_functions_values( begin_date,end_date )
-    exp = convert_to_a_hash( expenses )
-    assert_object_is_not_null( exp )
-    exp
+    hashed_expenses = convert_to_a_hash( expenses )
+    assert_object_is_not_null( hashed_expenses )
+    hashed_expenses
   end
 
   # Description: Finds values and descriptions of expenses to display in the 
@@ -151,11 +157,11 @@ class FunctionController < ApplicationController
 
   # Description: Converts an array of expenses into a hash of expenses.
   # Parameters: expenses.
-  # Return: expense_hash.
+  # Return: hashed_expenses.
   def convert_to_a_hash( expenses )
     assert_object_is_not_null( expenses )
     assert_type_of_object( expenses, Array )
-    expense_hash = JSON.parse( expenses )
+    hashed_expenses = JSON.parse( expenses )
   end
 
 end

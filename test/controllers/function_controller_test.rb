@@ -80,7 +80,7 @@ class FunctionControllerTest < ActionController::TestCase
   test 'Should return the n first elements of a hash' do
     hash_with_11 = { a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, i: 9, j: 10, k: 11 }
 
-    hash_result = @controller.filter_top_n( hash_with_11, 4 )
+    hash_result = @controller.filter_top_elements( hash_with_11, 4 )
     hash_with_4 = { a: 1, b: 2, c: 3, d: 4 }
     assert_equal( hash_result, hash_with_4 )
   end
@@ -88,14 +88,14 @@ class FunctionControllerTest < ActionController::TestCase
   test 'Should return the hash if its length < n' do
     hash_with_2 = { a: 1, b: 2 }
 
-    hash_result = @controller.filter_top_n( hash_with_2, 900 )
+    hash_result = @controller.filter_top_elements( hash_with_2, 900 )
     assert_equal( hash_result, hash_with_2 )
   end
 
   test 'Should return empty hash' do
     hash_empty = {}
 
-    hash_result = @controller.filter_top_n( hash_empty, 4 )
+    hash_result = @controller.filter_top_elements( hash_empty, 4 )
     assert_equal( hash_result, hash_empty )
   end
 end
