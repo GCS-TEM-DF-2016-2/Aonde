@@ -75,11 +75,14 @@ class FunctionController < ApplicationController
     ordered_data_in_hash = {}
 
     data_in_hash.each_with_index do |( description, summed_value ), index|
-      break if ( index >= amount_of_elements_to_filter )
-      ordered_data_in_hash[ description ] = summed_value
+      if ( index >= amount_of_elements_to_filter )
+        break
+      else
+        ordered_data_in_hash[ description ] = summed_value
+      end
     end
     assert_object_is_not_null( ordered_data_in_hash )
-    ordered_data_in_hash
+    return ordered_data_in_hash
   end
 
   # Description: Finds the data related to the provided dates, and filters them
@@ -97,7 +100,6 @@ class FunctionController < ApplicationController
         from_month: 'Janeiro', end_month: 'Dezembro',
         from_year: year, end_year: year )
     else
-
       year_filter = year.to_i
       if month == 'Todos'
         date_hash = { from_month: 'Janeiro', end_month: 'Dezembro',
@@ -110,7 +112,7 @@ class FunctionController < ApplicationController
       end
     end
     assert_object_is_not_null( time_interval )
-    time_interval
+    return time_interval
   end
 
   # Description: Prepares a hash of expenses existing in a determined time
@@ -123,7 +125,7 @@ class FunctionController < ApplicationController
     expenses = insert_expenses_functions( time_interval[ :begin ], 
                                           time_interval[ :end ] )
     assert_object_is_not_null( expenses )
-    expenses
+    return expenses
   end
 
   # Description: Calls methods to convert an array of expenses into a hash of
@@ -138,7 +140,7 @@ class FunctionController < ApplicationController
     expenses = find_functions_values( begin_date,end_date )
     hashed_expenses = convert_to_a_hash( expenses )
     assert_object_is_not_null( hashed_expenses )
-    hashed_expenses
+    return hashed_expenses
   end
 
   # Description: Finds values and descriptions of expenses to display in the 
@@ -153,6 +155,7 @@ class FunctionController < ApplicationController
     functions_expenses = FunctionGraph.where( year: 
       ( begin_date.year..end_date.year ) )
     .select( :description ).group( :description ).sum( :value ).to_json
+    return functions_expenses
   end
 
   # Description: Converts an array of expenses into a hash of expenses.
@@ -162,6 +165,7 @@ class FunctionController < ApplicationController
     assert_object_is_not_null( expenses )
     assert_type_of_object( expenses, Array )
     hashed_expenses = JSON.parse( expenses )
+    return hashed_expenses
   end
 
 end
