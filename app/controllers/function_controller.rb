@@ -6,8 +6,16 @@
 #####################################################################
 
 class FunctionController < ApplicationController
+
+  include Assertions
+
+  # Description: Prepares data to be shown in the Function page, where a graph
+  # is displayed.
+  # Parameters: none.
+  # Return: none.
   def show
     dates = HelperController.create_date
+    assert_object_is_not_null( dates )
     datas = insert_expenses_functions( dates[ :begin ], dates[ :end ] )
     datas.transform_values! {|value| value.to_i}
     ordered_data = datas.sort_by { |_description, sumValue| -sumValue }
@@ -15,9 +23,14 @@ class FunctionController < ApplicationController
     @top_10_data = get_top_10_data( ordered_data ).to_h.to_json
   end
 
+  # Description: filters the data on the graph by year or month.
+  # Parameters: none.
+  # Return: none.
   def filter
     dates = find_dates( params[ :year ], params[ :month ] )
+    assert_object_is_not_null( dates )
     expenses = get_expenses( dates )
+    assert_object_is_not_null( expenses )
     expenses.transform_values! {|value| value.to_i}
     @correct_datas = expenses.to_json
     ordered_data = expenses.sort_by { |_description, sumValue| -sumValue }
@@ -25,25 +38,44 @@ class FunctionController < ApplicationController
     render 'show'
   end
 
+  # Description: gets 10 of the highest previously ordered data 
+  # Parameters: ordered_data
+  # Return: none
   def get_top_10_data( ordered_data )
+    assert_object_is_not_null( ordered_data )
+    assert_type_of_object( ordered_data, Hash )
     @data_not_sort = filter_top_n( ordered_data, 10 )
     @top_10_data = sort_by_description( @data_not_sort )
   end
 
+  # Description: sorts a hash of data alphabetically by description.
+  # Parameters: data.
+  # Return: sorted_data.
   def sort_by_description( data )
-    data.sort_by { |description, _sumValue| description }
+    assert_object_is_not_null( data )
+    assert_type_of_object( data, Hash )
+    sorted_data = data.sort_by { |description, _sumValue| description }
+    return sorted_data
   end
 
-  def filter_top_n( hash, n )
+  # Description: filters a determined amount of elements at the top of a data
+  # hash.
+  # Parameters: hash, amount_of_elements_to_filter
+  # Return: new_hash
+  def filter_top_n( hash, amount_of_elements_to_filter )
     new_hash = {}
 
     hash.each_with_index do |( description, sumValue ), index|
-      break if ( index >= n )
+      break if ( index >= amount_of_elements_to_filter )
       new_hash[ description ] = sumValue
     end
     new_hash
   end
 
+  # Description: Finds the data related to the provided dates, and filters them
+  # to show in the graph.
+  # Parameters: year, month
+  # Return: dates
   def find_dates( year = 'Até hoje!', month = 'Todos' )
     dates = {}
     if year == 'Até hoje!'
@@ -68,22 +100,37 @@ class FunctionController < ApplicationController
     dates
   end
 
+  # Description: Prepares a hash of expenses existing in a determined time
+  # interval.
+  # Parameters: dates.
+  # Return: expenses.
   def get_expenses( dates )
     expenses = insert_expenses_functions( dates[ :begin ], dates[ :end ] )
   end
 
+  # Description: Calls methods to convert an array of expenses into a hash of
+  # expenses.
+  # Parameters: begin_date, end_date.
+  # Return: exp.
   def insert_expenses_functions( begin_date,end_date )
     expenses = find_functions_values( begin_date,end_date )
     exp = convert_to_a_hash( expenses )
     exp
   end
 
+  # Description: Finds values and descriptions of expenses to display in the 
+  # graph.
+  # Parameters: begin_date, end_date.
+  # Return: functions_expenses.
   def find_functions_values( begin_date,end_date )
     functions_expenses = FunctionGraph.where( year: 
       ( begin_date.year..end_date.year ) )
     .select( :description ).group( :description ).sum( :value ).to_json
   end
 
+  # Description: Converts an array of expenses into a hash of expenses.
+  # Parameters: expenses.
+  # Return: expense_hash.
   def convert_to_a_hash( expenses )
     expense_hash = JSON.parse( expenses )
   end
