@@ -1,7 +1,7 @@
 #####################################################################
 # Class name: FunctionController
 # File name: function_controller.rb
-# Description: Process the information of functions only for 
+# Description: Process the information of functions only for
 # federation
 #####################################################################
 
@@ -16,14 +16,14 @@ class FunctionController < ApplicationController
     def show
         time_interval = HelperController.create_date
         assert_object_is_not_null( time_interval )
-        function_expenses_by_date = insert_expenses_functions( 
-                                      time_interval[ :begin ], 
+        function_expenses_by_date = insert_expenses_functions(
+                                      time_interval[ :begin ],
                                       time_interval[ :end ] )
         function_expenses_by_date.transform_values! {|value| value.to_i}
-        ordered_function_expenses_by_date = 
+        ordered_function_expenses_by_date =
         function_expenses_by_date.sort_by { |_description, sumValue| -sumValue }
         @FUNCTION_EXPENSES = function_expenses_by_date.to_json
-        @TOP_10_DATA = get_top_10_data( 
+        @TOP_10_DATA = get_top_10_data(
                                 ordered_function_expenses_by_date ).to_h.to_json
     end
 
@@ -37,13 +37,13 @@ class FunctionController < ApplicationController
         assert_object_is_not_null( expenses )
         expenses.transform_values! {|value| value.to_i}
         @FUNCTION_EXPENSES = expenses.to_json
-        ordered_expenses = 
+        ordered_expenses =
                         expenses.sort_by { |_description, sumValue| -sumValue }
         @TOP_10_DATA = get_top_10_data( ordered_expenses ).to_h.to_json
         render 'show'
     end
 
-    # Description: Gets 10 of the highest previously ordered data 
+    # Description: Gets 10 of the highest previously ordered data
     # Parameters: ordered_data
     # Return: none
     def get_top_10_data( ordered_data )
@@ -51,6 +51,8 @@ class FunctionController < ApplicationController
         assert_type_of_object( ordered_data, Hash )
         @UNSORTED_DATA = filter_top_elements( ordered_data, 10 )
         @TOP_10_DATA = sort_by_description( @UNSORTED_DATA )
+
+        return @TOP_10_DATA
     end
 
     # Description: sorts a hash of data alphabetically by description.
@@ -59,8 +61,9 @@ class FunctionController < ApplicationController
     def sort_by_description( data )
         assert_object_is_not_null( data )
         assert_type_of_object( data, Hash )
-        data_sorted_by_description = 
+        data_sorted_by_description =
                           data.sort_by { |description, _sumValue| description }
+
         return data_sorted_by_description
     end
 
@@ -83,10 +86,11 @@ class FunctionController < ApplicationController
             end
         end
         assert_object_is_not_null( ordered_data_in_hash )
+
         return ordered_data_in_hash
     end
 
-    # Description: Finds the data related to the provided dates, and filters 
+    # Description: Finds the data related to the provided dates, and filters
     # them to show in the graph.
     # Parameters: year, month
     # Return: dates
@@ -98,21 +102,22 @@ class FunctionController < ApplicationController
             time_interval = HelperController.create_date
         elsif month == 'Todos'
             time_interval = HelperController.create_date(
-                        from_month: 'Janeiro', end_month: 'Dezembro',
-                        from_year: year, end_year: year )
+              from_month: 'Janeiro', end_month: 'Dezembro',
+                from_year: year, end_year: year )
         else
             year_filter = year.to_i
             if month == 'Todos'
                 date_hash = { from_month: 'Janeiro', end_month: 'Dezembro',
                               from_year: year_filter, end_year: year_filter }
                 time_interval = HelperController.create_date( date_hash )
-          else
-              date_hash = { from_month: month, end_month: month,
-                                from_year: year_filter, end_year: year_filter }
-              time_interval = HelperController.create_date( date_hash )
-          end
+            else
+                date_hash = { from_month: month, end_month: month,
+                  from_year: year_filter, end_year: year_filter }
+                time_interval = HelperController.create_date( date_hash )
+            end
         end
         assert_object_is_not_null( time_interval )
+
         return time_interval
     end
 
@@ -123,9 +128,10 @@ class FunctionController < ApplicationController
     def get_expenses( time_interval )
         assert_object_is_not_null( time_interval )
         assert_type_of_object( time_interval, Hash )
-        expenses = insert_expenses_functions( time_interval[ :begin ], 
+        expenses = insert_expenses_functions( time_interval[ :begin ],
                                               time_interval[ :end ] )
         assert_object_is_not_null( expenses )
+
         return expenses
     end
 
@@ -141,10 +147,11 @@ class FunctionController < ApplicationController
         expenses = find_functions_values( begin_date,end_date )
         hashed_expenses = convert_to_a_hash( expenses )
         assert_object_is_not_null( hashed_expenses )
+
         return hashed_expenses
     end
 
-    # Description: Finds values and descriptions of expenses to display in the 
+    # Description: Finds values and descriptions of expenses to display in the
     # graph.
     # Parameters: begin_date, end_date.
     # Return: functions_expenses.
@@ -153,9 +160,10 @@ class FunctionController < ApplicationController
         assert_type_of_object( begin_date, String )
         assert_object_is_not_null( end_date )
         assert_type_of_object( end_date, String )
-        functions_expenses = FunctionGraph.where( year: 
+        functions_expenses = FunctionGraph.where( year:
           ( begin_date.year..end_date.year ) )
         .select( :description ).group( :description ).sum( :value ).to_json
+
         return functions_expenses
     end
 
@@ -166,6 +174,7 @@ class FunctionController < ApplicationController
         assert_object_is_not_null( expenses )
         assert_type_of_object( expenses, Array )
         hashed_expenses = JSON.parse( expenses )
+
         return hashed_expenses
     end
 
