@@ -11,10 +11,10 @@ class PublicAgencyController < ApplicationController
     # Parameters: none.
     # Return: none.
     def index
-        @public_agencies = PublicAgency.all
-        @total_expense_agency = {}
-        @public_agencies.each do |agency|
-            @total_expense_agency[ agency.id ] = PublicAgencyGraph
+        @PUBLIC_AGENCIES = PublicAgency.all
+       @TOTAL_EXPENSE_OF_AGENCY = {}
+        @PUBLIC_AGENCIES.each do |agency|
+           @TOTAL_EXPENSE_OF_AGENCY[ agency.id ] = PublicAgencyGraph
               .where( id_public_agency: agency.id ).sum( :value )
         end
     end
@@ -24,8 +24,8 @@ class PublicAgencyController < ApplicationController
     # Parameters: none.
     # Return: none.
     def show
-        find_agency_by_id( params[ :id ] )
-        increment_views_amount( @public_agency )
+        @PUBLIC_AGENCY = find_agency_by_id( params[ :id ] )
+        increment_views_amount( @PUBLIC_AGENCY )
     end
 
     public
@@ -34,14 +34,18 @@ class PublicAgencyController < ApplicationController
     # Parameters: none.
     # Return: none.
     def agency_chart
-        params[ :year ] = '2015' unless params[ :year ]
-        get_expenses_for_public_agency = HelperController.expenses_year( params[ :id ]
-          .to_i, params[ :year ] )
-        list_expenses = change_type_list_expenses( get_expenses_for_public_agency,
-          params[ :year ] )
+        if(params[ :year ].nil?)
+            params[ :year ] = '2015'
+        else
+            # Nothing to do.
+        end
+        expenses_of_public_agency = HelperController.expenses_year( 
+                                        params[ :id ].to_i, params[ :year ] )
+        expenses_list = change_type_list_expenses( 
+                            expenses_of_public_agency, params[ :year ] )
 
         respond_to do |format|
-            format.json { render json: list_expenses }
+            format.json { render json: expenses_list }
         end
     end
 
@@ -61,8 +65,8 @@ class PublicAgencyController < ApplicationController
     # Parameters: id_public_agency
     # Return: total_expense
     def get_expenses_for_public_agency( id_public_agency )
-        total_expense = Expense.where( public_agency_id: id_public_agency ).sum( :value )
-
+        total_expense = Expense.where( 
+                            public_agency_id: id_public_agency ).sum( :value )
         return total_expense
     end
 

@@ -17,7 +17,7 @@
 	</thead>
 
 	<tbody>
-	<% @public_agencies.each do |agency| %>
+	<% @PUBLIC_AGENCIES.each do |agency| %>
 	  	<tr onclick="location.href = '<%=public_agency_path(agency.id)%>';" style="cursor: pointer;">  
 		  	<td>
 		  	<center><%= agency.name%></center>
@@ -27,7 +27,7 @@
 		  	</td>
 		  	<td>
 		  	
-		  	<center><%= number_to_currency(@total_expense_agency[agency.id],
+		  	<center><%= number_to_currency(@TOTAL_EXPENSE_OF_AGENCY[agency.id],
 		  				separator:",",delimiter: ".",unit: "") %></center>
 		  	</td>
 	  	</tr>

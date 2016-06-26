@@ -25,8 +25,8 @@ class PublicAgencyControllerTest < ActionController::TestCase
   test 'get index of public agencies' do
     get :index
     assert_response :success
-    assert_not_nil assigns( :public_agencies )
-    assert_not_nil assigns( :total_expense_agency )
+    assert_not_nil assigns( :PUBLIC_AGENCIES )
+    assert_not_nil assigns( :TOTAL_EXPENSE_OF_AGENCY )
   end
 
   test 'get show public agency' do
