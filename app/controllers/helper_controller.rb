@@ -7,13 +7,15 @@ module HelperController
 
   MONTHNAMES_BR = [ nil ] + %w( Janeiro Fevereiro Março Abril Maio Junho
                              Julho Agosto Setembro Outubro Novembro Dezembro )
+
   # Description: Allocates expenses to months and stores them in a hash.
-  # Parameters: expense_month.
-  #Return: expense_month.
-  def self.int_to_month( expense_month )
-    expense_month.transform_keys! do |month|
+  # Parameters: expense_of_a_month.
+  # Return: expense_of_a_month.
+  def self.int_to_month( expense_of_a_month )
+    expense_of_a_month.transform_keys! do |month|
       MONTHNAMES_BR[ month ]
     end
+    return expense_of_a_month
   end
 
   # Description: Gets all the expenses of a given public agency, sums them all, 
@@ -31,9 +33,14 @@ module HelperController
   # Parameters: year, id, name_entity, attribute.
   # Return: none.
   def self.find_expenses_entity( year = '2015', id, name_entity, attribute )
-   year ||= 2015
+    if year.nil?
+     year = 2015
+    else
+      # Nothing to do.
+    end
    Expense.joins( name_entity )
-      .where( public_agency_id: id, payment_date: "#{year}-01-01".."#{year}-12-31" )
+      .where( public_agency_id: id, 
+              payment_date: "#{year}-01-01".."#{year}-12-31" )
       .select( attribute ).order( 'sum_value DESC' ).group( attribute )
       .sum( :value ).transform_values! {|v| v.to_f}.to_a
   end
@@ -51,28 +58,36 @@ module HelperController
 
     last_date = last_day_date( last_date )
     date = { begin: first_date, end: last_date }
-    date
+    return date
   end
 
   # Description: Returns the index of a given month in the MONTHS_BR array. 
   # Basically, returns the position of a month in the year.
   # Parameters: month.
-  # Return: none.
+  # Return: index.
   def self.month_to_int( month )
-    MONTHNAMES_BR.index( month )
+    index = MONTHNAMES_BR.index( month )
+    return index
   end
 
+  # Description: Checks if a given time interval is valid.
+  # Parameters: begin_date, end_date
+  # Return: validation_status
   def self.date_valid?( begin_date, end_date )
-    valid = true
+    validation_status = true
 
     if ( begin_date.year == end_date.year )
-      valid = false if begin_date.month > end_date.month
+      if begin_date.month > end_date.month
+        validation_status = false
+      else
+        # Nothing to do
+      end
     elsif begin_date.year > end_date.year
-      valid = false
+      validation_status = false
     else
-      valid = true
+      validation_status = true
     end
-    valid
+    return validation_status
   end
 
   # Description: Gets the last day of month.
@@ -80,9 +95,7 @@ module HelperController
   # Return: last_day.
   def self.last_day_date( date )
     month = date.month
-
     last_day = 0
-
     if month == 2
       last_day = leap_year_day( date )
     elsif ( month.odd? && month <= 7 ) || ( month.even? && month >= 8 )
@@ -90,7 +103,7 @@ module HelperController
     else
       last_day = 30
     end
-    date.change( day: last_day )
+    return date.change( day: last_day )
   end
 
   # Description: Checks if the year of a given date is a leap year, and adjust
@@ -104,7 +117,7 @@ module HelperController
     else
       day = 28
     end
-    day
+    return day
   end
 
   private_class_method :leap_year_day,:last_day_date,:date_valid?,:month_to_int
