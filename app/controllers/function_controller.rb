@@ -63,12 +63,17 @@ class FunctionController < ApplicationController
   # Parameters: hash, amount_of_elements_to_filter
   # Return: new_hash
   def filter_top_n( hash, amount_of_elements_to_filter )
+    assert_object_is_not_null( hash )
+    assert_type_of_object( hash, Hash )
+    assert_object_is_not_null( amount_of_elements_to_filter )
+    assert_type_of_object( amount_of_elements_to_filter, Fixnum )
     new_hash = {}
 
     hash.each_with_index do |( description, sumValue ), index|
       break if ( index >= amount_of_elements_to_filter )
       new_hash[ description ] = sumValue
     end
+    assert_object_is_not_null( new_hash )
     new_hash
   end
 
@@ -77,6 +82,8 @@ class FunctionController < ApplicationController
   # Parameters: year, month
   # Return: dates
   def find_dates( year = 'Até hoje!', month = 'Todos' )
+    assert_type_of_object( year, String )
+    assert_type_of_object( month, String )
     dates = {}
     if year == 'Até hoje!'
       dates = HelperController.create_date
@@ -97,6 +104,7 @@ class FunctionController < ApplicationController
         dates = HelperController.create_date( date_hash )
       end
     end
+    assert_object_is_not_null( dates )
     dates
   end
 
@@ -105,7 +113,11 @@ class FunctionController < ApplicationController
   # Parameters: dates.
   # Return: expenses.
   def get_expenses( dates )
+    assert_object_is_not_null( dates )
+    assert_type_of_object( dates, Hash )
     expenses = insert_expenses_functions( dates[ :begin ], dates[ :end ] )
+    assert_object_is_not_null( expenses )
+    expenses
   end
 
   # Description: Calls methods to convert an array of expenses into a hash of
@@ -113,8 +125,13 @@ class FunctionController < ApplicationController
   # Parameters: begin_date, end_date.
   # Return: exp.
   def insert_expenses_functions( begin_date,end_date )
+    assert_object_is_not_null( begin_date )
+    assert_type_of_object( begin_date, String )
+    assert_object_is_not_null( end_date )
+    assert_type_of_object( end_date, String )
     expenses = find_functions_values( begin_date,end_date )
     exp = convert_to_a_hash( expenses )
+    assert_object_is_not_null( exp )
     exp
   end
 
@@ -122,7 +139,11 @@ class FunctionController < ApplicationController
   # graph.
   # Parameters: begin_date, end_date.
   # Return: functions_expenses.
-  def find_functions_values( begin_date,end_date )
+  def find_functions_values( begin_date, end_date )
+    assert_object_is_not_null( begin_date )
+    assert_type_of_object( begin_date, String )
+    assert_object_is_not_null( end_date )
+    assert_type_of_object( end_date, String )
     functions_expenses = FunctionGraph.where( year: 
       ( begin_date.year..end_date.year ) )
     .select( :description ).group( :description ).sum( :value ).to_json
@@ -132,6 +153,8 @@ class FunctionController < ApplicationController
   # Parameters: expenses.
   # Return: expense_hash.
   def convert_to_a_hash( expenses )
+    assert_object_is_not_null( expenses )
+    assert_type_of_object( expenses, Array )
     expense_hash = JSON.parse( expenses )
   end
 
