@@ -5,6 +5,7 @@
 ######################################################################
 
 class Expense < ActiveRecord::Base
+
     belongs_to :program
     belongs_to :public_agency
     belongs_to :function
@@ -13,4 +14,5 @@ class Expense < ActiveRecord::Base
     validates :document_number, presence: true
     validates :payment_date, presence: true
     validates :value, numericality: {greater_than: -1}
+    
 end
