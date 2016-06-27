@@ -12,21 +12,30 @@
       <%= link_to image_tag("dados_abertos.jpg")%>
     </div>
     <div id="info">
-      <h1> Acompanhe os gastos dos Órgãos Públicos </h1>
-      <h2>Com o Aondê é possível visualizar o orçamento dos Órgãos 
-      Públicos Federais e comparar com as despesas realizadas 
-      advindas do Portal da transparência.</h2>
+      <h1>
+        <%= t('Acompanhe os gastos dos Órgãos Públicos') %>
+      </h1>
+      <h2>
+      <%= t('Com o Aondê é possível visualizar o orçamento dos Órgãos') %>
+        <%= t('Públicos Federais e comparar com as despesas realizadas') %>
+        <%= t('advindas do Portal da transparência') %>.
+      </h2>
     </div>
 </div>
 
 <div id="free">
   <div class="container" id="align_page">
    <div class="row" id="align_form">
-    <h3>Fale Conosco</h3>
+    <h3>
+    <%= t('Fale Conosco') %>
+    </h3>
     <span style="position: relative; float:left; ">
-    Você pode nos enviar um e-mail com suas dúvidas, críticas, 
-    sugestões ou comentários.<p></p><p>
-    Preencha os campos abaixo:</span>
+    <%= t('Você pode nos enviar um e-mail com suas dúvidas')%>, 
+    <%= t('críticas') %> , 
+    <%= t('sugestões ou comentários') %>.
+    <p></p><p>
+    <%= t('Preencha os campos abaixo') %>:
+    </span>
     <form class="col"id="align_row"  onsubmit="return sendEmail('<%= contact_path %>')">
         <div class="input-field col s12" id="align_row" >
           <%= email_field_tag :from, params[:from]%>
@@ -34,13 +43,13 @@
         </div>
         <div class="input-field col s12"id="align_row" >
           <%= text_field_tag :subject, params[:subject]%>
-          <label for="icon_prefix">Assunto</label>
+          <label for="icon_prefix"><%= t('Assunto') %></label>
         </div>
         <div class="input-field col s12"id="align_row" >
            <textarea id="textarea1" class="materialize-textarea" length="500"<%= text_area_tag :text%></textarea>
-           <label for="textarea1">Texto</label>
+           <label for="textarea1"><%= t('Texto') %></label>
       </div>
-        <button class="btn waves-effect waves-light" type="submit" name="action" style="margin-top:25px;float:right; background:#006699">Enviar
+        <button class="btn waves-effect waves-light" type="submit" name="action" style="margin-top:25px;float:right; background:#006699"><%= t('Enviar') %>
         <i class="material-icons right">email</i>
       </button>
     </form>
