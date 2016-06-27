@@ -15,6 +15,10 @@ class SearchController < ApplicationController
         end
     end
 
+    # Description: Recovers an array with all the object for each
+    # types of entities.
+    # Parameters: keyword.
+    # Return: entities.
     def find_entities( keyword )
         public_agencies = search_entities( PublicAgency, :public_agency_id, keyword )
         programs = search_entities( Program, :program_id, keyword )
@@ -24,6 +28,9 @@ class SearchController < ApplicationController
         return entities
     end
 
+    # Description: Returns all the expenses for a specific entity.
+    # Parameters: class_entity,name_field,keyword.
+    # Return: total_expense_entity.
     def search_entities( class_entity, name_field, keyword )
         entities = class_entity.select( :name, :id ).where( 'name LIKE ?', "%#{keyword}%" )
         total_expense_entity = {}
@@ -34,6 +41,9 @@ class SearchController < ApplicationController
         return total_expense_entity.to_a
     end
 
+    # Description: Returns all the expenses for a type of entity.
+    # Parameters: name_field,entity_id.
+    # Return: total_expense.
     def expense_entities( name_field, entity_id )
         total_expense = Expense.where( name_field => entity_id ).sum( :value )
 
