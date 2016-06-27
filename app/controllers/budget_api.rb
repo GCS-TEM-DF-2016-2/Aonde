@@ -7,6 +7,8 @@
 
 class BudgetAPI
 
+    extend Assertions
+
     # Description: Get all budgets of an especific year.
     # Parameters: public_agency_id, year = 'Todos'
     # Return: budget_years
@@ -20,7 +22,9 @@ class BudgetAPI
         else
             fail 'Não foi possível obter o valor da API do orçamento'
         end
-        budget_years
+
+        assert_object_is_not_null( budget_years )
+        return budget_years
     end
 
     # Description: Increment in budget_years array a data.
@@ -46,6 +50,8 @@ class BudgetAPI
         else
             # nothing to do.
         end
+
+        assert_type_of_object( budget_by_year, Hash )
         return budget_by_year
     end
 
@@ -61,6 +67,7 @@ class BudgetAPI
         rescue Exception => error
             raise "Não foi possível conectar a API\n#{error}"
         end
+        assert_object_is_not_null( data_api )
         return data_api
     end
 
@@ -76,6 +83,8 @@ class BudgetAPI
         else
             valid_data = false
         end
+
+        assert_object_is_not_null( valid_data )
         return valid_data
     end
 
@@ -91,6 +100,7 @@ class BudgetAPI
         rescue
             raise 'Não foi possivel conventer os dados da API do orçamento'
         end
+        assert_type_of_object( budget_year, Hash )
       return budget_year
     end
 

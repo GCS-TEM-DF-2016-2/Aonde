@@ -17,7 +17,8 @@ class BudgetController < ApplicationController
         expense_month = process_expense( params[ :year ],params[ :id ].to_i )
         budget_month = process_budget( params[ :year ],
                                        params[ :id ], expense_month )
-        data_budget = { 'expenses' => expense_month, 'budgets' => budget_month }
+        data_budget = { 'expenses' => expense_month,
+            'budgets' => budget_month }
         assert_object_is_not_null( data_budget )
         respond_to do |format|
           format.json { render json: data_budget }
