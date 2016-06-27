@@ -67,9 +67,10 @@ module Graph
     # Return: id.
     def self.id_node( full_id )
         id = full_id.split( '_' )
-        id[ 0 ].to_i
 
-        return id
+        first_id = id[ 0 ].to_i
+
+        return first_id
     end
 
     # Description: Method that adds edges to the graph.
