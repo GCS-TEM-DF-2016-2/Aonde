@@ -5,10 +5,6 @@
 # views of type_expense and the model TypeExpense.
 #####################################################################
 
-# type_expense_controller.rb
-# Obtain and process the data of expenses associate to type expense
-# of a public agency
-
 class TypeExpenseController < ApplicationController
     def show
         find_agency_by_id( params[ :id ] )
