@@ -120,6 +120,7 @@ class BudgetAPI
         url_query = generate_query( public_agency_id, year )
         url = begin_url + url_query + end_url
 
+        assert_object_is_not_null( url )
         return url
     end
 
@@ -142,6 +143,7 @@ class BudgetAPI
 
         url_query = URI.encode( prefix + query )
 
+        assert_object_is_not_null( url_query )
         return url_query
     end
 
@@ -154,7 +156,8 @@ class BudgetAPI
             year = year.to_i - 1
             year_query = '?exercicioURI loa:identificador ' + year.to_s + ' . '
         end
-        year_query
+        assert_object_is_not_null( year_query )
+        return year_query
     end
     private_class_method :query_for_year, :generate_query, :get_url,
                            :parse_json_to_hash, :valid_data?, :obtain_api_data,

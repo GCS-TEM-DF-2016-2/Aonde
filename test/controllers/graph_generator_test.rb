@@ -55,7 +55,7 @@ class GraphGeneratorTest < ActiveSupport::TestCase
                       { 'id' => '2_1', 'label' => 'valid name',
                         'group' => PublicAgency.name } ],
                      [ { 'from' => '1_', 'to' => '2_1', 'color' => '#43BFC5',
-                        'title' => 'R$500,00', 'value' => 500 } ] ]
+                        'title' => 'R$ 500,00', 'value' => 500 } ] ]
 
     assert_equal( data_expected, data_graph )
   end
@@ -103,7 +103,7 @@ class GraphGeneratorTest < ActiveSupport::TestCase
     value = 0
     data_graph = [ [  ], [ {} ] ]
     Graph.add_value( value, data_graph )
-    expected_value = [ [  ], [ { 'title' => 'R$0,00', 'value' => 0 } ] ]
+    expected_value = [ [  ], [ { 'title' => 'R$ 0,00', 'value' => 0 } ] ]
     assert_equal( expected_value, data_graph )
   end
   test 'Raise negative value' do

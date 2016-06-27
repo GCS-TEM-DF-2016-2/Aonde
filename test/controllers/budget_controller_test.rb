@@ -8,31 +8,38 @@
 require 'test_helper'
 require 'database_cleaner'
 
+
 class BudgetControllerTest < ActionController::TestCase
-  def setup
-    FakeWeb.allow_net_connect = false
+    def setup
+        FakeWeb.allow_net_connect = false
 
-    SuperiorPublicAgency.create( id: 1, name: 'valid SuperiorPublicAgency' )
+        SuperiorPublicAgency.create( id: 1, name: 'valid SuperiorPublicAgency' )
 
-    PublicAgency.create( id: 1, views_amount: 0, name: 'valid Agency',
-                         superior_public_agency_id: 1 )
-    PublicAgency.create( id: 2, views_amount: 0, name: 'valid Agency 2',
-                         superior_public_agency_id: 1 )
+        PublicAgency.create( id: 1, views_amount: 0, name: 'valid Agency',
+                           superior_public_agency_id: 1 )
+        PublicAgency.create( id: 2, views_amount: 0, name: 'valid Agency 2',
+                           superior_public_agency_id: 1 )
 
-    Expense.create( document_number: '0000', payment_date: Date.new( 2010, 1, 1 ),
-                   public_agency_id: 1, value: 500 )
-    Expense.create( document_number: '0001', payment_date: Date.new( 2010, 1, 2 ),
-                   public_agency_id: 1, value: 500 )
-    Expense.create( document_number: '0002', payment_date: Date.new( 2010, 1, 1 ),
-                   public_agency_id: 1, value: 1000 )
+        Expense.create( document_number: '0000',
+                        payment_date: Date.new( 2010, 1, 1 ),
+                        public_agency_id: 1, value: 500 )
+        Expense.create( document_number: '0001', 
+                        payment_date: Date.new( 2010, 1, 2 ),
+                        public_agency_id: 1, value: 500 )
+        Expense.create( document_number: '0002', 
+                        payment_date: Date.new( 2010, 1, 1 ),
+                        public_agency_id: 1, value: 1000 )
 
-    Expense.create( document_number: '0003', payment_date: Date.new( 2015, 1, 1 ),
-                   public_agency_id: 2, value: 500 )
-    Expense.create( document_number: '0004', payment_date: Date.new( 2015, 2, 1 ),
-                   public_agency_id: 2, value: 500 )
-    Expense.create( document_number: '0005', payment_date: Date.new( 2015, 3, 1 ),
-                   public_agency_id: 2, value: 1000 )
-  end
+        Expense.create( document_number: '0003', 
+                        payment_date: Date.new( 2015, 1, 1 ),
+                        public_agency_id: 2, value: 500 )
+        Expense.create( document_number: '0004', 
+                        payment_date: Date.new( 2015, 2, 1 ),
+                        public_agency_id: 2, value: 500 )
+        Expense.create( document_number: '0005', 
+                        payment_date: Date.new( 2015, 3, 1 ),
+                        public_agency_id: 2, value: 1000 )
+    end
 
   def teardown
     FakeWeb.allow_net_connect = true
