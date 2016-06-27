@@ -11,6 +11,10 @@ class ContactController < ApplicationController
 
     public
 
+    # Description: Send one email to the software manager with comments
+    # or suggestions about the software.
+    # Parameters: none.
+    # Return: none.
     def send_simple_message
         user_email = params[ :from ]
         subject = params[ :subject ]
@@ -29,6 +33,10 @@ class ContactController < ApplicationController
         end
     end
 
+    # Description: This method is called to make help view about the messages
+    # made about this software.
+    # Parameters: none.
+    # Return: none.
     def help
     end
 end
