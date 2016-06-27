@@ -6,6 +6,11 @@
 #####################################################################
 
 class TypeExpenseController < ApplicationController
+
+    # Description: This method is called to show data to user in view
+    # of expenses controller.
+    # Parameters: none.
+    # Return: none.
     def show
         find_agency_by_id( params[ :id ] )
         params[ :year ] = '2015' unless params[ :year ]
